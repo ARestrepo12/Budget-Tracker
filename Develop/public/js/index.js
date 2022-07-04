@@ -78,6 +78,7 @@ function populateChart() {
   });
 }
 
+
 function sendTransaction(isAdding) {
   let nameEl = document.querySelector("#t-name");
   let amountEl = document.querySelector("#t-amount");
