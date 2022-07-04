@@ -1,17 +1,18 @@
+// variable for db connection
 let db;
 
 const request = indexedDB.open("tracker", 1);
 
-
+// if database version changes
 request.onupgradeneeded = function (event) {
     const db = event.target.results;
-
+//create object store set to auto increment 
     db.createObjectStore("new_transaction", {autoIncrement: true });
 };
 
 request.onsuccess = function (event) {
     db = event.target.results;
-
+//check if app is online, if yes then run 
     if (navigator.onLine) {
         uploadTransaction();
     }
@@ -20,7 +21,7 @@ request.onsuccess = function (event) {
 request.onerror = function (event) {
     console.log(event.target.errorCode);
 };
-
+// function executed if attempt to submit a new transaction with no internet connection
 function saveRecord(record) {
     const transaction = db.transaction(["new_transaction"], "readwrite");
 
@@ -35,8 +36,9 @@ function uploadTransaction() {
     const transactObjectStore = transaction.objectStore("new_transaction");
 
     const getAll = transactObjectStore.getAll();
-
+// upon successful function execution 
     getAll.onsuccess = function () {
+        //if data in indexDb store send to api server
         if (getAll.result.length > 0) {
             fetch("/api/transaction", {
                 method: "POST",
